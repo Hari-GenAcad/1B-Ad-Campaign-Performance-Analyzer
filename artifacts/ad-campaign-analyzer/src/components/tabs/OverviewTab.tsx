@@ -55,6 +55,11 @@ export function OverviewTab({ data }: { data: AdCampaignData[] }) {
     );
   };
 
+  const top5ByRoi = useMemo(
+    () => [...data].sort((a, b) => b.ROI - a.ROI).slice(0, 5),
+    [data]
+  );
+
   return (
     <div className="space-y-4">
       <KPICards metrics={metrics} />
@@ -117,6 +122,42 @@ export function OverviewTab({ data }: { data: AdCampaignData[] }) {
               </ComposedChart>
             </ResponsiveContainer>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base">Top 5 Campaigns by ROI</CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left text-muted-foreground font-medium px-5 py-2.5">Campaign ID</th>
+                <th className="text-left text-muted-foreground font-medium px-5 py-2.5">Company</th>
+                <th className="text-left text-muted-foreground font-medium px-5 py-2.5">Channel</th>
+                <th className="text-left text-muted-foreground font-medium px-5 py-2.5">Goal</th>
+                <th className="text-right text-muted-foreground font-medium px-5 py-2.5">ROI</th>
+                <th className="text-right text-muted-foreground font-medium px-5 py-2.5">Spend</th>
+                <th className="text-right text-muted-foreground font-medium px-5 py-2.5">Conversions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {top5ByRoi.map((row, i) => (
+                <tr key={row.Campaign_ID} className={i % 2 === 0 ? "bg-muted/30" : ""}>
+                  <td className="px-5 py-2.5 font-medium text-foreground">{row.Campaign_ID}</td>
+                  <td className="px-5 py-2.5 text-muted-foreground">{row.Company}</td>
+                  <td className="px-5 py-2.5 text-muted-foreground">{row.Channel_Used}</td>
+                  <td className="px-5 py-2.5 text-muted-foreground">{row.Campaign_Goal}</td>
+                  <td className="px-5 py-2.5 text-right font-semibold text-blue-600">{row.ROI.toFixed(2)}%</td>
+                  <td className="px-5 py-2.5 text-right text-muted-foreground">
+                    {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 }).format(row.Spend)}
+                  </td>
+                  <td className="px-5 py-2.5 text-right text-muted-foreground">{row.Conversions.toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </CardContent>
       </Card>
     </div>
