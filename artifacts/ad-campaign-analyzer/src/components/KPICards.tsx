@@ -24,7 +24,7 @@ export function KPICards({ metrics, isLoading }: KPICardsProps) {
     { title: "Total Conversions", value: formatNumber(metrics.totalConversions) },
     { title: "Avg CTR", value: formatPercent(metrics.avgCtr) },
     { title: "Avg CPC", value: formatCurrency(metrics.avgCpc) },
-    { title: "Avg ROI", value: metrics.avgRoi.toFixed(2) },
+    { title: "Avg ROI", value: metrics.avgRoi.toFixed(2) + "%" },
   ];
 
   return (

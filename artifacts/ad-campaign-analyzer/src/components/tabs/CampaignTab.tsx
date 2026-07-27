@@ -171,9 +171,9 @@ export function CampaignTab({ data }: { data: AdCampaignData[] }) {
           <CardContent>
             <div className="h-[280px] w-full">
               <ResponsiveContainer width="100%" height="100%" debounce={0}>
-                <BarChart data={funnelData} layout="vertical" margin={{ top: 10, right: 30, left: 20, bottom: 0 }}>
+                <BarChart data={funnelData} layout="vertical" margin={{ top: 10, right: 30, left: 90, bottom: 0 }}>
                   <XAxis type="number" hide />
-                  <YAxis dataKey="step" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 13, fill: tickColor, fontWeight: 500 }} dx={-10} />
+                  <YAxis dataKey="step" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 13, fill: tickColor, fontWeight: 500 }} />
                   <Tooltip cursor={{ fill: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }} content={<FunnelTooltip />} isAnimationActive={false} />
                   <Bar dataKey="value" fill={CHART_COLORS.blue} radius={[0, 4, 4, 0]} isAnimationActive={false}>
                     {funnelData.map((entry, index) => (
