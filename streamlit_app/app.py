@@ -220,7 +220,7 @@ def render_overview(df: pd.DataFrame):
     c2.metric("Total Conversions", fmt_num(m["total_conversions"]))
     c3.metric("Avg CTR", fmt_pct(m["ctr"]))
     c4.metric("Avg CPC", fmt_currency(m["cpc"]))
-    c5.metric("Avg ROI", f"{m['avg_roi']:.2f}")
+    c5.metric("Avg ROI", f"{m['avg_roi']:.2f}%")
 
     st.markdown("---")
 
@@ -372,21 +372,53 @@ def render_campaign_deep_dive(df: pd.DataFrame):
         click_rate = (total_clk / total_imp * 100) if total_imp > 0 else 0
         conv_rate = (total_conv / total_clk * 100) if total_clk > 0 else 0
 
-        fig = go.Figure(go.Funnel(
-            y=["Impressions", "Clicks", "Conversions"],
-            x=[total_imp, total_clk, total_conv],
-            textinfo="value+percent initial",
-            marker=dict(color=["#0079F2", "#795EFF", "#009118"]),
-            connector=dict(line=dict(color="#cccccc", width=1)),
-        ))
+        # Use a horizontal bar chart so all three stages are always visible
+        # regardless of scale differences between Impressions / Clicks / Conversions.
+        stages = ["Impressions", "Clicks", "Conversions"]
+        values = [total_imp, total_clk, total_conv]
+        colors = ["#0079F2", "#795EFF", "#009118"]
+        drop_labels = [
+            "100%",
+            f"{click_rate:.1f}% of Impressions",
+            f"{conv_rate:.1f}% of Clicks",
+        ]
+
+        fig = go.Figure()
+        for i, (stage, val, color, drop) in enumerate(
+            zip(stages, values, colors, drop_labels)
+        ):
+            fig.add_trace(
+                go.Bar(
+                    name=stage,
+                    y=[stage],
+                    x=[val],
+                    orientation="h",
+                    marker_color=color,
+                    marker_opacity=0.85,
+                    text=f"  {val:,}  ({drop})",
+                    textposition="outside",
+                    textfont=dict(size=12),
+                    showlegend=False,
+                )
+            )
+
         fig.update_layout(
-            height=340,
-            margin=dict(l=0, r=0, t=10, b=0),
+            height=260,
+            barmode="overlay",
+            margin=dict(l=0, r=120, t=10, b=10),
             plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)",
+            xaxis=dict(
+                showgrid=True,
+                gridcolor="#e5e5e5",
+                tickformat=",",
+            ),
+            yaxis=dict(
+                showgrid=False,
+                autorange="reversed",
+            ),
         )
         st.plotly_chart(fig, use_container_width=True)
-        st.caption(f"CTR: {click_rate:.1f}%  |  Conversion Rate: {conv_rate:.1f}%")
 
 
 def render_trends(df: pd.DataFrame):
