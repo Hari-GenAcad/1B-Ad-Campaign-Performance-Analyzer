@@ -1,5 +1,5 @@
 kind = "data-app"
-previewPath = "/"
+previewPath = "/dashboard"
 title = "Ad Campaign Performance Analyzer"
 version = "1.0.0"
 id = "artifacts/ad-campaign-analyzer"
