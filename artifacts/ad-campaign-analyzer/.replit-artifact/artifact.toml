@@ -1,5 +1,5 @@
 kind = "data-app"
-previewPath = "/dashboard"
+previewPath = "/"
 title = "Ad Campaign Performance Analyzer"
 version = "1.0.0"
 id = "artifacts/ad-campaign-analyzer"
@@ -7,7 +7,7 @@ router = "path"
 
 [[services]]
 name = "web"
-paths = [ "/dashboard" ]
+paths = [ "/" ]
 localPort = 26198
 
 [services.development]
@@ -19,21 +19,9 @@ serve = "static"
 publicDir = "artifacts/ad-campaign-analyzer/dist/public"
 
 [[services.production.rewrites]]
-from = "/dashboard/*"
-to = "/dashboard/index.html"
+from = "/*"
+to = "/index.html"
 
 [services.env]
 PORT = "26198"
-BASE_PATH = "/dashboard"
-
-[[services]]
-name = "streamlit"
-paths = [ "/" ]
-localPort = 5000
-
-[services.development]
-run = "bash /home/runner/workspace/streamlit_app/run.sh"
-
-[services.env]
-PORT = "5000"
 BASE_PATH = "/"
