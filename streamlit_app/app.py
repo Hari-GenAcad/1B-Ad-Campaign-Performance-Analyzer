@@ -6,6 +6,18 @@ from plotly.subplots import make_subplots
 import io
 import os
 
+
+def hex_to_rgba(hex_color: str, alpha: float) -> str:
+    """Convert a six-digit hex color to Plotly's rgba() format."""
+    normalized = hex_color.lstrip("#")
+    if len(normalized) != 6:
+        raise ValueError(f"Expected a six-digit hex color, got {hex_color!r}")
+
+    red, green, blue = (
+        int(normalized[index:index + 2], 16) for index in (0, 2, 4)
+    )
+    return f"rgba({red},{green},{blue},{alpha})"
+
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Ad Campaign Performance Analyzer",
@@ -453,7 +465,7 @@ def render_trends(df: pd.DataFrame):
         name=selected,
         line=dict(color=color_map[selected], width=2),
         fill="tozeroy",
-        fillcolor=color_map[selected].replace("#", "rgba(") + ",0.1)".replace(",0.1)", "").replace("rgba(", "rgba(") + ",0.1)",
+        fillcolor=hex_to_rgba(color_map[selected], 0.1),
     ))
     fig.update_layout(
         title=f"{selected} Over Time",
